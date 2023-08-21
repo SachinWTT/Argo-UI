@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Observable, Subscription } from 'rxjs';
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
+
+const Terminal = require('xterm');
+Terminal.loadAddon('fit');
 
 require('./logs-viewer.scss');
 
@@ -16,8 +17,7 @@ export interface LogsViewerProps {
 }
 
 export class LogsViewer extends React.Component<LogsViewerProps> {
-    private terminal: Terminal;
-    private fitAddon: FitAddon;
+    private terminal: any;
     private subscription: Subscription | null = null;
 
     constructor(props: LogsViewerProps) {
@@ -31,18 +31,13 @@ export class LogsViewer extends React.Component<LogsViewerProps> {
     }
 
     public initTerminal(container: HTMLElement) {
-        this.fitAddon = new FitAddon();
         this.terminal = new Terminal({
             scrollback: 99999,
-            allowTransparency: true,
-            theme: {
-                background: 'transparent',
-                foreground: '#495763',
-            },
+            theme: 'ax',
         });
-        this.terminal.loadAddon(this.fitAddon);
+
         this.terminal.open(container);
-        this.fitAddon.fit();
+        this.terminal.fit();
     }
 
     public componentDidMount() {
@@ -66,9 +61,7 @@ export class LogsViewer extends React.Component<LogsViewerProps> {
     }
 
     private refresh(source: LogsSource) {
-        if (this.terminal) {
-            this.terminal.reset();
-        }
+        this.terminal.reset();
         this.ensureUnsubscribed();
         const onLoadComplete = () => {
             if (source.shouldRepeat()) {

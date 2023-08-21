@@ -37,7 +37,7 @@ export class NavigationManager implements NavigationApi {
             path = `${path}?${urlQuery}`;
         }
         options = options || {};
-        if (options.event && (options.event.metaKey || options.event.ctrlKey || options.event.button === 1)) {
+        if (options.event && (options.event.metaKey || options.event.ctrlKey)) {
             window.open(path, '_blank');
         } else {
             if (options.replace) {
